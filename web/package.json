@@ -1,0 +1,23 @@
+{
+  "name": "english-with-kawthar",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:share": "vite build --mode share --base ./ --outDir dist-share --emptyOutDir && node scripts/make-artifact-page.mjs dist-share",
+    "preview": "vite preview",
+    "test": "node --test \"tests/*.test.js\"",
+    "migrate-data": "node scripts/migrate-data.mjs",
+    "import-data": "node --env-file=.env.local scripts/import-data.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1"
+  },
+  "devDependencies": {
+    "vite": "^8.3.4"
+  }
+}

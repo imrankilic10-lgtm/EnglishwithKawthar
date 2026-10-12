@@ -1,0 +1,29 @@
+# Depo herkese açık: gerçek kişilere ait hiçbir bilgi (öğrenci/hoca adları, ödemeler, notlar) GitHub'a GİTMEZ.
+# Gerçek veri dışa aktarımları + taşıma ayarları
+data/
+# Eski Excel / PDF tabloları
+docs/eski-tablolar/
+# Proje notu ve devir notu (öğrenci adları ve ödeme ayrıntıları içerir)
+CLAUDE.md
+docs/Ders_Odemeleri_Devir_Notu.md
+# Tasarım önizlemeleri (gerçek adlarla)
+docs/tasarim-onerisi/
+# Testler gerçek veriyle çalışır
+web/tests/
+
+# Bağımlılıklar ve derleme çıktıları
+node_modules/
+web/dist/
+web/dist-share/
+
+# Gizli anahtarlar (Supabase). Örnek dosya ve paylaşım ayarı (gizli bilgi yok) hariç.
+.env
+.env.*
+!web/.env.example
+!web/.env.share
+
+# Sistem / editör
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,777 @@
+<title>English with Kawthar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sticky header + tab bar, single centered column (max 1080px); program view is a scrollable time grid. */
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --surface-2:#F7F8FA; --ink:#1B2030; --muted:#5F667C; --line:#DFE3EA;
+  --accent:#0D7466; --accent-ink:#FFFFFF; --accent-soft:#DDF1EC;
+  --late:#B42318; --late-bg:#FDE8E5; --today:#9A5B00; --today-bg:#FEF1D6; --soon:#2952B3; --soon-bg:#E4EBFB; --ok:#18794E; --ok-bg:#DFF3E7;
+  --c-pembe:#F7D3E3; --c-pembe-i:#7D1F4D; --c-turuncu:#FDDCC0; --c-turuncu-i:#82400F; --c-lila:#E3D7F7; --c-lila-i:#4E2A8A;
+  --c-mavi:#D3E3FA; --c-mavi-i:#1D4785; --c-yesil:#D5EFD6; --c-yesil-i:#22602A; --c-sari:#FBEFB5; --c-sari-i:#6B5300;
+  --c-somon:#FAD8CF; --c-somon-i:#8A2E1A; --c-turkuaz:#CDEFF0; --c-turkuaz-i:#10595E; --c-gri:#E3E6EC; --c-gri-i:#3B4252;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11141B; --surface:#1A1E28; --surface-2:#212633; --ink:#E9ECF3; --muted:#9BA2B6; --line:#2C3242;
+  --accent:#3DBFA8; --accent-ink:#06231E; --accent-soft:#163A35;
+  --late:#FF8A7A; --late-bg:#3A1C1A; --today:#F5BE5B; --today-bg:#3A2D12; --soon:#8FB0FF; --soon-bg:#1C2846; --ok:#6FD39C; --ok-bg:#16301F;
+  --c-pembe:#4A2337; --c-pembe-i:#F9C4DC; --c-turuncu:#4A2E17; --c-turuncu-i:#FDCFA6; --c-lila:#35294D; --c-lila-i:#D9C8F7;
+  --c-mavi:#1F3352; --c-mavi-i:#BFD6FA; --c-yesil:#1E3A22; --c-yesil-i:#BDE6C0; --c-sari:#3F3612; --c-sari-i:#F5E39A;
+  --c-somon:#4A2820; --c-somon-i:#F8C6B8; --c-turkuaz:#163E40; --c-turkuaz-i:#B5E9EB; --c-gri:#2A2F3B; --c-gri-i:#D2D7E2;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11141B; --surface:#1A1E28; --surface-2:#212633; --ink:#E9ECF3; --muted:#9BA2B6; --line:#2C3242;
+  --accent:#3DBFA8; --accent-ink:#06231E; --accent-soft:#163A35;
+  --late:#FF8A7A; --late-bg:#3A1C1A; --today:#F5BE5B; --today-bg:#3A2D12; --soon:#8FB0FF; --soon-bg:#1C2846; --ok:#6FD39C; --ok-bg:#16301F;
+  --c-pembe:#4A2337; --c-pembe-i:#F9C4DC; --c-turuncu:#4A2E17; --c-turuncu-i:#FDCFA6; --c-lila:#35294D; --c-lila-i:#D9C8F7;
+  --c-mavi:#1F3352; --c-mavi-i:#BFD6FA; --c-yesil:#1E3A22; --c-yesil-i:#BDE6C0; --c-sari:#3F3612; --c-sari-i:#F5E39A;
+  --c-somon:#4A2820; --c-somon-i:#F8C6B8; --c-turkuaz:#163E40; --c-turkuaz-i:#B5E9EB; --c-gri:#2A2F3B; --c-gri-i:#D2D7E2;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+button,input,select,textarea{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px 8px}
+.brand h1{font-family:var(--f-display);font-size:22px;margin:0;letter-spacing:-.01em}
+.brand h1 span{color:var(--accent)}
+.brand .date{color:var(--muted);font-size:13px}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+nav.tabs button{border:0;background:transparent;padding:8px 14px;border-radius:999px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+nav.tabs button:focus-visible,.btn:focus-visible,.row:focus-visible,.blk:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{padding-block:18px 80px}
+h2{font-family:var(--f-display);font-size:19px;margin:0;text-wrap:balance}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0;font-weight:700}
+.stack{display:flex;flex-direction:column;gap:16px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:600}
+.kpi .v{font-family:var(--f-display);font-size:22px;font-weight:700;margin-top:2px}
+.kpi.net .v{color:var(--accent)}
+.btn{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:10px;font-weight:600;cursor:pointer}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--late)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.list{display:flex;flex-direction:column}
+.row{display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;width:100%}
+.list .row:first-child{border-top:0}
+.row .main{flex:1;min-width:0}
+.row .name{font-weight:600;display:block;overflow-wrap:anywhere}
+.row .sub{display:block}
+.row>.chip{max-width:38%;overflow:hidden;text-overflow:ellipsis;flex-shrink:1}
+.row .sub{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .amt{font-weight:700;text-align:right;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.pill.late{background:var(--late-bg);color:var(--late)} .pill.today{background:var(--today-bg);color:var(--today)}
+.pill.week{background:var(--soon-bg);color:var(--soon)} .pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.none{background:var(--surface-2);color:var(--muted)}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:1px 8px;border-radius:6px;white-space:nowrap}
+.empty{color:var(--muted);font-size:14px;padding:8px 4px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar input[type=search]{flex:1;min-width:160px}
+input,select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:7px 12px;cursor:pointer;font-weight:600;font-size:14px}
+.seg input{width:auto}
+.seg label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.hint{font-size:13px;color:var(--muted)}
+.cls-pembe{background:var(--c-pembe);color:var(--c-pembe-i)} .cls-turuncu{background:var(--c-turuncu);color:var(--c-turuncu-i)}
+.cls-lila{background:var(--c-lila);color:var(--c-lila-i)} .cls-mavi{background:var(--c-mavi);color:var(--c-mavi-i)}
+.cls-yesil{background:var(--c-yesil);color:var(--c-yesil-i)} .cls-sari{background:var(--c-sari);color:var(--c-sari-i)}
+.cls-somon{background:var(--c-somon);color:var(--c-somon-i)} .cls-turkuaz{background:var(--c-turkuaz);color:var(--c-turkuaz-i)}
+.cls-gri{background:var(--c-gri);color:var(--c-gri-i)}
+/* lessons */
+.lesson{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.lesson.cancel{opacity:.6}
+.lesson .lh{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lesson .time{font-weight:700;font-variant-numeric:tabular-nums}
+.att{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:14px}
+.att select{width:auto;padding:4px 8px;font-size:13px}
+.daynav{display:flex;align-items:center;gap:6px}
+/* program grid */
+.pg-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.pg{display:grid;min-width:760px;position:relative}
+.pg .dh{font-weight:700;font-size:13px;text-align:center;padding:8px 4px;border-bottom:1px solid var(--line);background:var(--surface-2);position:sticky;top:0}
+.pg .tcol{border-right:1px solid var(--line)}
+.pg .tl{height:56px;font-size:11px;color:var(--muted);text-align:right;padding:2px 6px 0 0;font-variant-numeric:tabular-nums;border-top:1px solid var(--line)}
+.pg .day{position:relative;border-right:1px solid var(--line);cursor:copy}
+.pg .day:last-child{border-right:0}
+.pg .hr{height:56px;border-top:1px dashed var(--line)}
+.blk{position:absolute;border-radius:8px;padding:4px 6px;font-size:12px;line-height:1.25;overflow:hidden;cursor:pointer;border:0;text-align:left}
+.blk b{display:block;font-size:12.5px;text-decoration:underline;text-underline-offset:2px}
+.blk .st{display:block;opacity:.9}
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(10,14,24,.45);z-index:40;display:flex;justify-content:flex-end}
+.sheet{background:var(--bg);width:min(560px,100%);height:100%;overflow-y:auto;padding:16px 16px calc(32px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px;padding-top:calc(16px + env(safe-area-inset-top,0px))}
+.sheet .sh{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:var(--bg);padding-bottom:8px;z-index:2}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:14px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.slotrow{display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:6px;align-items:center}
+.swatches{display:flex;gap:6px;flex-wrap:wrap}
+.swatches label{width:32px;height:32px;border-radius:8px;cursor:pointer;display:block;border:2px solid transparent}
+.swatches input{position:absolute;opacity:0;width:1px;height:1px}
+.swatches label:has(input:checked){border-color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;z-index:60;max-width:calc(100% - 32px)}
+.banner{background:var(--today-bg);color:var(--today);border-radius:10px;padding:10px 14px;font-size:14px;font-weight:600}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--late-bg);color:var(--late);padding:8px 12px;border-radius:10px;font-size:14px;font-weight:600}
+@media (max-width:560px){ .brand h1{font-size:19px} .kpi .v{font-size:19px} .kpis{grid-template-columns:1fr 1fr} .row{gap:8px} }
+@media (prefers-reduced-motion:no-preference){ .sheet{animation:slide .18s ease-out} @keyframes slide{from{transform:translateX(24px);opacity:.6}} }
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="brand"><h1>English with <span>Kawthar</span></h1><div class="date" id="todayLbl"></div></div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-tab="ozet">Bugün</button>
+    <button role="tab" data-tab="ogrenciler">Öğrenciler</button>
+    <button role="tab" data-tab="program">Ders Programı</button>
+    <button role="tab" data-tab="odemeler">Ödemeler</button>
+    <button role="tab" data-tab="hocalar">Hocalar</button>
+  </nav>
+</div></header>
+<main class="wrap" id="app"><div class="panel empty">Veriler yükleniyor. Öğrenciler, ödemeler ve ders programı birkaç saniye içinde burada görünecek.</div></main>
+<div id="sheetRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+(() => {
+"use strict";
+// ---------- helpers ----------
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad = n => String(n).padStart(2,"0");
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const addDays = (s,n) => { const d = parse(s); d.setDate(d.getDate()+n); return ymd(d); };
+const wd = s => { const g = parse(s).getDay(); return g === 0 ? 7 : g; };
+const mondayOf = s => addDays(s, 1 - wd(s));
+const toMin = t => { const [h,m] = String(t||"0:0").split(":").map(Number); return h*60 + (m||0); };
+const hoursOf = sl => Math.max(0, (toMin(sl.end) - toMin(sl.start)) / 60);
+const TL = n => (Math.round(Number(n)||0)).toLocaleString("tr-TR") + " TL";
+const DAYS = ["", "Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
+const DAYS_S = ["", "Pzt","Sal","Çar","Per","Cum","Cmt","Paz"];
+const MONTHS = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const fmtDate = s => { if(!s) return "–"; const d = parse(s); return `${d.getDate()} ${MONTHS[d.getMonth()]}`; };
+const fmtDateLong = s => { const d = parse(s); return `${d.getDate()} ${MONTHS[d.getMonth()]} ${DAYS[wd(s)]}`; };
+const monthLabel = k => { const [y,m] = k.split("-").map(Number); return `${MONTHS[m-1]} ${y}`; };
+const KINDS = {grup:"Grup", ozel:"Özel ders", online:"Online", matematik:"Matematik"};
+const COLORS = ["pembe","turuncu","lila","mavi","yesil","sari","somon","turkuaz","gri"];
+const PAYMODES = {aylik:"Aylık (tarihli)", haftalik:"Haftalık", paket:"Paket (ders saati)"};
+const uid = p => p + "_" + Math.random().toString(36).slice(2,10);
+const now = () => new Date();
+let TODAY = ymd(now());
+const nowMin = () => { const d = now(); return d.getHours()*60 + d.getMinutes(); };
+
+// ---------- state ----------
+const S = { classes:{}, students:{}, payments:{}, events:{}, loaded:new Set(),
+  tab: "ozet", day: TODAY, month: TODAY.slice(0,7), search:"", filterCls:"", showPassive:false };
+let db = null;
+let sheet = null; // {type, id, ...}
+
+try { const t = localStorage.getItem("kw_tab"); if (t) S.tab = t; } catch(e) {}
+
+// ---------- domain ----------
+const activeStudents = () => Object.values(S.students).filter(s => s.active !== false).sort((a,b)=>a.name.localeCompare(b.name,"tr"));
+const studentsOf = cid => activeStudents().filter(s => s.classId === cid);
+const paymentsOf = sid => Object.values(S.payments).filter(p => p.studentId === sid).sort((a,b)=> (b.date||"").localeCompare(a.date||""));
+const evId = (cid, date, start) => `${cid}_${date}_${String(start).replace(":","")}`;
+const eventFor = (cid, date, start) => S.events[evId(cid,date,start)];
+const clsName = cid => S.classes[cid]?.name || "Sınıf yok";
+const clsColor = cid => S.classes[cid]?.color || "gri";
+
+function occurrences(cls, from, to, cap=2000){
+  const out = []; if (!cls || !cls.slots || !cls.slots.length) return out;
+  let d = from, n = 0;
+  while (d <= to && n < cap){
+    const w = wd(d);
+    for (const sl of cls.slots) if (Number(sl.day) === w) { out.push({date:d, start:sl.start, end:sl.end, hours:hoursOf(sl)}); n++; }
+    d = addDays(d,1);
+  }
+  out.sort((a,b)=> a.date===b.date ? toMin(a.start)-toMin(b.start) : a.date.localeCompare(b.date));
+  return out;
+}
+const isDone = o => o.date < TODAY || (o.date === TODAY && toMin(o.end) <= nowMin());
+function counts(st, o){
+  const ev = eventFor(st.classId, o.date, o.start);
+  if (ev?.cancelled) return false;
+  if (ev?.absent?.[st.id] === "sayilmaz") return false;
+  return true;
+}
+function hoursDone(st){
+  const cls = S.classes[st.classId];
+  return occurrences(cls, st.startDate || TODAY, TODAY).filter(o => isDone(o) && counts(st,o)).reduce((a,o)=>a+o.hours,0);
+}
+
+// Returns the next payment the student owes.
+function status(st){
+  const p = st.pay || {}; const mode = p.mode || "aylik";
+  const pays = paymentsOf(st.id);
+  let r = { mode, dueDate:null, amount:0, period:null, periodLabel:"", hours:0 };
+  if (mode === "aylik"){
+    const paid = new Set(pays.map(x=>x.period));
+    let [y,m] = (st.startDate||TODAY).split("-").map(Number);
+    for (let i=0;i<60;i++){
+      const key = `${y}-${pad(m)}`;
+      const dim = new Date(y,m,0).getDate();
+      let due = `${key}-${pad(Math.min(Number(p.dueDay)||1, dim))}`;
+      if (due < st.startDate) due = st.startDate;
+      if (!paid.has(key)) { r = {...r, dueDate:due, amount:Number(p.amount)||0, period:key, periodLabel: monthLabel(key)}; break; }
+      m++; if (m>12){ m=1; y++; }
+    }
+  } else if (mode === "haftalik"){
+    const paid = new Set(pays.map(x=>x.period));
+    let mon = mondayOf(st.startDate||TODAY);
+    for (let i=0;i<260;i++){
+      let due = addDays(mon, (Number(p.dueDay)||1) - 1);
+      if (due < st.startDate) due = st.startDate;
+      if (!paid.has(mon)) { r = {...r, dueDate:due, amount:Number(p.amount)||0, period:mon, periodLabel:`${fmtDate(mon)} haftası`}; break; }
+      mon = addDays(mon,7);
+    }
+  } else {
+    const paidH = pays.reduce((a,x)=>a+(Number(x.hours)||0),0);
+    const pk = Number(p.packageHours)||8;
+    const cls = S.classes[st.classId];
+    const occ = occurrences(cls, st.startDate||TODAY, addDays(TODAY, 400)).filter(o => counts(st,o));
+    let cum = 0, due = null;
+    for (const o of occ){ if (cum + o.hours > paidH + 1e-9) { due = o.date; break; } cum += o.hours; }
+    const done = hoursDone(st);
+    r = {...r, dueDate: due, amount: pk * (Number(st.rate)||0), hours: pk, periodLabel: `${pk} saatlik paket`, remaining: paidH - done, paidH, done};
+  }
+  r.level = levelOf(r.dueDate);
+  return r;
+}
+function levelOf(due){
+  if (!due) return "none";
+  if (due < TODAY) return "late";
+  if (due === TODAY) return "today";
+  if (due <= addDays(TODAY,7)) return "week";
+  return "ok";
+}
+function pillFor(r){
+  if (r.level === "none") return `<span class="pill none">Program yok</span>`;
+  const days = Math.round((parse(r.dueDate) - parse(TODAY))/86400000);
+  if (r.level === "late") return `<span class="pill late">${-days} gün gecikti</span>`;
+  if (r.level === "today") return `<span class="pill today">Bugün</span>`;
+  if (r.level === "week") return `<span class="pill week">${days} gün kaldı</span>`;
+  return `<span class="pill ok">${fmtDate(r.dueDate)}</span>`;
+}
+const teacherCut = (st, amount) => (st.teacher && Number(st.teacherShare) && Number(st.rate)) ? Math.round(amount * Number(st.teacherShare) / Number(st.rate)) : 0;
+
+// ---------- db ----------
+async function save(col, id, data){
+  if (!db) { toast("Kayıt yapılamadı: veri bağlantısı yok."); return false; }
+  try { await db.doc(`${col}/${id}`).set(JSON.parse(JSON.stringify(data))); return true; }
+  catch(e){ toast(e?.code === "invalid_argument" ? "Bu kaydı değiştirme yetkin yok." : "Kayıt yapılamadı, tekrar dene."); return false; }
+}
+async function remove(col, id){
+  if (!db) return false;
+  try { await db.doc(`${col}/${id}`).delete(); return true; } catch(e){ toast("Silinemedi, tekrar dene."); return false; }
+}
+function strip(snapDoc){ return {id: snapDoc.id, ...snapDoc.data()}; }
+
+async function boot(){
+  const c = window.claude;
+  db = c && c.use ? await c.use("db") : null;
+  if (!db){ $("#app").innerHTML = `<div class="panel empty">Veri bağlantısı kurulamadı. Sayfayı claude.ai içinde, yetkili hesabınla açtığından emin ol.</div>`; return; }
+  for (const col of ["classes","students","payments","events"]){
+    db.collection(col).onSnapshot(snap => {
+      const m = {}; snap.docs.forEach(d => { if (d.exists) m[d.id] = strip(d); });
+      S[col] = m; S.loaded.add(col); scheduleRender();
+    }, err => { S.loaded.add(col); toast("Veriler okunamadı. Sayfayı yenile."); scheduleRender(); });
+  }
+}
+let rq = 0;
+function scheduleRender(){ cancelAnimationFrame(rq); rq = requestAnimationFrame(() => { render(); refreshSheet(); }); }
+
+// ---------- render ----------
+function render(){
+  TODAY = ymd(now());
+  $("#todayLbl").textContent = fmtDateLong(TODAY);
+  document.querySelectorAll("#tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === S.tab)));
+  if (S.loaded.size < 4) return;
+  const app = $("#app");
+  const views = {ozet:vOzet, ogrenciler:vStudents, program:vProgram, odemeler:vPayments, hocalar:vTeachers};
+  const keepScroll = $(".pg-scroll")?.scrollLeft;
+  const focusId = document.activeElement?.id;
+  app.innerHTML = views[S.tab]();
+  if (keepScroll && $(".pg-scroll")) $(".pg-scroll").scrollLeft = keepScroll;
+  if (focusId && document.getElementById(focusId) && app.contains(document.getElementById(focusId))) {
+    const el = document.getElementById(focusId); el.focus(); if (el.setSelectionRange && el.type==="search") el.setSelectionRange(el.value.length, el.value.length);
+  }
+}
+
+function dueRow(st, r){
+  return `<button class="row" data-act="profile" data-id="${st.id}">
+    <span class="chip cls-${clsColor(st.classId)}">${esc(clsName(st.classId))}</span>
+    <span class="main"><span class="name">${esc(st.name)}</span><span class="sub">${esc(r.periodLabel)}${r.mode==="paket" && r.remaining!=null ? ` · ${fmtH(r.remaining)} saat kaldı` : ""}</span></span>
+    ${pillFor(r)}<span class="amt num">${TL(r.amount)}</span></button>`;
+}
+const fmtH = h => (Math.round(h*10)/10).toLocaleString("tr-TR");
+
+function vOzet(){
+  const all = activeStudents().map(st => ({st, r:status(st)}));
+  const late = all.filter(x=>x.r.level==="late").sort((a,b)=>a.r.dueDate.localeCompare(b.r.dueDate));
+  const soon = all.filter(x=>x.r.level==="today"||x.r.level==="week").sort((a,b)=>a.r.dueDate.localeCompare(b.r.dueDate));
+  const m = TODAY.slice(0,7);
+  const mp = Object.values(S.payments).filter(p => (p.date||"").startsWith(m));
+  const got = mp.reduce((a,p)=>a+(Number(p.amount)||0),0);
+  const cut = mp.reduce((a,p)=>a+(Number(p.teacherCut)||0),0);
+  const lateSum = late.reduce((a,x)=>a+x.r.amount,0);
+  return `<div class="stack">
+    <div class="kpis">
+      <div class="kpi"><div class="l">${MONTHS[Number(m.slice(5))-1]} ayında alınan</div><div class="v num">${TL(got)}</div></div>
+      <div class="kpi"><div class="l">Gecikmiş ödemeler</div><div class="v num" style="color:var(--late)">${TL(lateSum)}</div></div>
+      <div class="kpi"><div class="l">Hocalara düşen pay</div><div class="v num">${TL(cut)}</div></div>
+      <div class="kpi net"><div class="l">Net kalan</div><div class="v num">${TL(got-cut)}</div></div>
+    </div>
+    <div class="grid2">
+      <section class="panel stack" style="gap:8px">
+        <div class="sec-head"><h2>Gecikenler</h2><span class="pill late">${late.length} kişi</span></div>
+        <div class="list">${late.length ? late.map(x=>dueRow(x.st,x.r)).join("") : `<div class="empty">Geciken ödeme yok.</div>`}</div>
+      </section>
+      <section class="panel stack" style="gap:8px">
+        <div class="sec-head"><h2>Bu hafta ödemesi gelenler</h2><span class="pill week">${soon.length} kişi</span></div>
+        <div class="list">${soon.length ? soon.map(x=>dueRow(x.st,x.r)).join("") : `<div class="empty">Önümüzdeki 7 günde ödeme günü gelen yok.</div>`}</div>
+      </section>
+    </div>
+    ${vLessons()}
+  </div>`;
+}
+
+function lessonsOn(date){
+  const out = [];
+  for (const cls of Object.values(S.classes)) for (const o of occurrences(cls, date, date)) out.push({cls, ...o});
+  return out.sort((a,b)=>toMin(a.start)-toMin(b.start));
+}
+function vLessons(){
+  const L = lessonsOn(S.day);
+  return `<section class="panel stack" style="gap:12px">
+    <div class="sec-head"><h2>${S.day===TODAY ? "Bugünün dersleri" : "Dersler"}</h2>
+      <div class="daynav"><button class="btn sm" data-act="day" data-d="-1" aria-label="Önceki gün">‹</button>
+      <strong>${fmtDateLong(S.day)}</strong>
+      <button class="btn sm" data-act="day" data-d="1" aria-label="Sonraki gün">›</button>
+      ${S.day!==TODAY?`<button class="btn sm ghost" data-act="day" data-d="0">Bugün</button>`:""}</div></div>
+    <p class="hint" style="margin:0">Dersler programdan otomatik sayılır. Sadece farklı bir durum olduğunda işaretle: iptal olan ders ya da gelmeyen öğrenci.</p>
+    ${L.length ? L.map(l => lessonCard(l)).join("") : `<div class="empty">Bu gün programda ders yok.</div>`}
+  </section>`;
+}
+function lessonCard(l){
+  const ev = eventFor(l.cls.id, l.date, l.start) || {};
+  const sts = studentsOf(l.cls.id);
+  return `<div class="lesson ${ev.cancelled?"cancel":""}">
+    <div class="lh"><span class="time">${l.start}–${l.end}</span><span class="chip cls-${l.cls.color||"gri"}">${esc(l.cls.name)}</span>
+      ${ev.cancelled?`<span class="pill late">İptal</span>`:""}
+      <span style="flex:1"></span>
+      <button class="btn sm" data-act="cancel" data-c="${l.cls.id}" data-date="${l.date}" data-s="${l.start}">${ev.cancelled?"İptali geri al":"Dersi iptal et"}</button></div>
+    ${ev.cancelled ? `<div class="hint">İptal edilen ders paket öğrencilerinin hakkından düşmez.</div>` :
+      sts.map(st => { const a = ev.absent?.[st.id] || "geldi";
+        return `<div class="att"><span>${esc(st.name)}</span>
+        <select aria-label="${esc(st.name)} katılım" data-act="absent" data-c="${l.cls.id}" data-date="${l.date}" data-s="${l.start}" data-st="${st.id}">
+          <option value="geldi" ${a==="geldi"?"selected":""}>Geldi</option>
+          <option value="sayilir" ${a==="sayilir"?"selected":""}>Gelmedi, ders sayılsın</option>
+          <option value="sayilmaz" ${a==="sayilmaz"?"selected":""}>Gelmedi, sayılmasın</option></select></div>`; }).join("") || `<div class="hint">Bu derse kayıtlı öğrenci yok.</div>`}
+  </div>`;
+}
+
+function vStudents(){
+  const q = S.search.toLocaleLowerCase("tr");
+  let list = Object.values(S.students).filter(s => S.showPassive ? s.active===false : s.active!==false)
+    .filter(s => !S.filterCls || s.classId === S.filterCls)
+    .filter(s => !q || (s.name+" "+(s.parentName||"")+" "+clsName(s.classId)).toLocaleLowerCase("tr").includes(q))
+    .sort((a,b)=> clsName(a.classId).localeCompare(clsName(b.classId),"tr") || a.name.localeCompare(b.name,"tr"));
+  const classes = Object.values(S.classes).sort((a,b)=>a.name.localeCompare(b.name,"tr"));
+  return `<div class="stack">
+    <div class="sec-head"><h2>Öğrenciler <span class="hint num">(${list.length})</span></h2><button class="btn pri" data-act="newStudent">+ Yeni öğrenci</button></div>
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="İsim, veli ya da grup ara" value="${esc(S.search)}" aria-label="Ara">
+      <select id="fcls" style="width:auto" aria-label="Gruba göre süz"><option value="">Tüm gruplar</option>${classes.map(c=>`<option value="${c.id}" ${S.filterCls===c.id?"selected":""}>${esc(c.name)}</option>`).join("")}</select>
+      <button class="btn" data-act="togglePassive" aria-pressed="${S.showPassive}">Pasifler</button>
+    </div>
+    <div class="panel"><div class="list">${list.length ? list.map(st => { const r = status(st);
+      return `<button class="row" data-act="profile" data-id="${st.id}">
+        <span class="chip cls-${clsColor(st.classId)}">${esc(clsName(st.classId))}</span>
+        <span class="main"><span class="name">${esc(st.name)}</span><span class="sub">${esc(PAYMODES[st.pay?.mode||"aylik"])} · ${TL(st.rate)}/${st.rateUnit==="hafta"?"hafta":"saat"}${st.teacher?` · ${esc(st.teacher)}`:""}</span></span>
+        ${st.active===false?`<span class="pill none">Pasif</span>`:pillFor(r)}</button>`; }).join("") : `<div class="empty">Bu filtreyle öğrenci bulunamadı.</div>`}</div></div>
+  </div>`;
+}
+
+const GRID_START = 9, GRID_END = 21, HPX = 56;
+function vProgram(){
+  const classes = Object.values(S.classes);
+  const hasSun = classes.some(c => (c.slots||[]).some(s=>Number(s.day)===7));
+  const days = hasSun ? [1,2,3,4,5,6,7] : [1,2,3,4,5,6];
+  const cols = `56px repeat(${days.length}, minmax(110px,1fr))`;
+  let h = `<div class="pg" style="grid-template-columns:${cols}"><div class="dh tcol"></div>${days.map(d=>`<div class="dh">${DAYS[d]}</div>`).join("")}`;
+  h += `<div class="tcol">${Array.from({length:GRID_END-GRID_START},(_,i)=>`<div class="tl">${pad(GRID_START+i)}.00</div>`).join("")}</div>`;
+  for (const d of days){
+    const items = [];
+    for (const c of classes) (c.slots||[]).forEach(sl => { if (Number(sl.day)===d) items.push({c, sl, s:toMin(sl.start), e:toMin(sl.end)}); });
+    items.sort((a,b)=>a.s-b.s);
+    // lanes for overlaps
+    const lanes = []; items.forEach(it => { let li = lanes.findIndex(end => end <= it.s); if (li<0){ li = lanes.length; lanes.push(0);} lanes[li] = it.e; it.lane = li; });
+    items.forEach(it => { it.n = Math.max(1, ...items.filter(o => o.s < it.e && o.e > it.s).map(o=>o.lane+1)); });
+    h += `<div class="day" data-act="emptySlot" data-day="${d}">${Array.from({length:GRID_END-GRID_START},()=>`<div class="hr"></div>`).join("")}
+      ${items.map(it => { const top = (it.s - GRID_START*60)/60*HPX, ht = Math.max(22,(it.e-it.s)/60*HPX - 3);
+        const sts = studentsOf(it.c.id); const cap = Number(it.c.capacity)||0;
+        return `<button class="blk cls-${it.c.color||"gri"}" data-act="classView" data-id="${it.c.id}" style="top:${top+1}px;height:${ht}px;left:calc(${it.lane/it.n*100}% + 3px);width:calc(${100/it.n}% - 6px)">
+          <b>${esc(it.c.name)}</b><span class="st num">${it.sl.start}–${it.sl.end}${cap?` · ${sts.length}/${cap}`:` · ${sts.length} kişi`}</span>
+          ${(it.e-it.s) < 90 ? `<span class="st">${sts.map(s=>esc(s.name)).join(", ")}</span>` : sts.map(s=>`<span class="st">• ${esc(s.name)}</span>`).join("")}</button>`; }).join("")}</div>`;
+  }
+  h += `</div>`;
+  const noSlot = classes.filter(c => !(c.slots||[]).length);
+  return `<div class="stack">
+    <div class="sec-head"><h2>Haftalık ders programı</h2><button class="btn pri" data-act="newClass">+ Yeni grup / ders</button></div>
+    <p class="hint" style="margin:0">Boş bir saate dokunarak oraya ders ekleyebilirsin. Bir derse dokununca saatlerini ve öğrencilerini düzenleyebilirsin.</p>
+    <div class="pg-scroll">${h}</div>
+    ${noSlot.length?`<div class="panel stack" style="gap:8px"><h3>Programda saati olmayan dersler</h3><div class="legend">${noSlot.map(c=>`<button class="chip cls-${c.color||"gri"}" style="border:0;cursor:pointer;padding:4px 10px" data-act="classView" data-id="${c.id}">${esc(c.name)} · ${studentsOf(c.id).length} kişi</button>`).join("")}</div></div>`:""}
+  </div>`;
+}
+
+function monthOptions(sel){
+  const set = new Set([TODAY.slice(0,7), sel]); Object.values(S.payments).forEach(p => p.date && set.add(p.date.slice(0,7)));
+  return [...set].sort().reverse().map(k=>`<option value="${k}" ${k===sel?"selected":""}>${monthLabel(k)}</option>`).join("");
+}
+function vPayments(){
+  const mp = Object.values(S.payments).filter(p => (p.date||"").startsWith(S.month)).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  const got = mp.reduce((a,p)=>a+(Number(p.amount)||0),0), cut = mp.reduce((a,p)=>a+(Number(p.teacherCut)||0),0);
+  return `<div class="stack">
+    <div class="sec-head"><h2>Ödemeler</h2><div class="toolbar"><select id="pmonth" style="width:auto" aria-label="Ay">${monthOptions(S.month)}</select><button class="btn pri" data-act="payPick">+ Ödeme al</button></div></div>
+    <div class="kpis"><div class="kpi"><div class="l">Alınan</div><div class="v num">${TL(got)}</div></div>
+      <div class="kpi"><div class="l">Hoca payları</div><div class="v num">${TL(cut)}</div></div>
+      <div class="kpi net"><div class="l">Net</div><div class="v num">${TL(got-cut)}</div></div>
+      <div class="kpi"><div class="l">Ödeme sayısı</div><div class="v num">${mp.length}</div></div></div>
+    <div class="panel"><div class="list">${mp.length ? mp.map(p => { const st = S.students[p.studentId];
+      return `<button class="row" data-act="profile" data-id="${p.studentId}">
+        <span class="num hint" style="width:56px">${fmtDate(p.date)}</span>
+        <span class="main"><span class="name">${esc(st?.name || "Silinmiş öğrenci")}</span><span class="sub">${esc(p.label||"")}${p.note?` · ${esc(p.note)}`:""}</span></span>
+        <span class="amt num">${TL(p.amount)}${p.teacherCut?`<br><span class="hint">hoca ${TL(p.teacherCut)}</span>`:""}</span></button>`; }).join("") : `<div class="empty">Bu ay kayıtlı ödeme yok.</div>`}</div></div>
+  </div>`;
+}
+
+function vTeachers(){
+  const names = [...new Set(Object.values(S.students).map(s=>s.teacher).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"tr"));
+  const mp = Object.values(S.payments).filter(p => (p.date||"").startsWith(S.month) && p.teacher);
+  return `<div class="stack">
+    <div class="sec-head"><h2>Hocalar</h2><select id="pmonth" style="width:auto" aria-label="Ay">${monthOptions(S.month)}</select></div>
+    <p class="hint" style="margin:0">Veliden alınan her ödemede hocanın payı otomatik ayrılır. Hocaya parasını gönderince "Gönderildi" olarak işaretle.</p>
+    ${names.length ? `<div class="grid2">${names.map(n => { const ps = mp.filter(p=>p.teacher===n).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+      const tot = ps.reduce((a,p)=>a+(Number(p.teacherCut)||0),0), sent = ps.filter(p=>p.teacherPaid).reduce((a,p)=>a+(Number(p.teacherCut)||0),0);
+      const sts = Object.values(S.students).filter(s=>s.teacher===n && s.active!==false);
+      return `<section class="panel stack" style="gap:10px">
+        <div class="sec-head"><h2>${esc(n)}</h2>${tot-sent>0?`<span class="pill today">${TL(tot-sent)} gönderilecek</span>`:(tot?`<span class="pill ok">Hepsi gönderildi</span>`:"")}</div>
+        <div class="hint">${sts.map(s=>esc(s.name)).join(", ")}</div>
+        <div class="list">${ps.length ? ps.map(p => `<div class="row" style="cursor:default">
+          <span class="num hint" style="width:56px">${fmtDate(p.date)}</span>
+          <span class="main"><span class="name">${esc(S.students[p.studentId]?.name||"–")}</span><span class="sub num">Veliden ${TL(p.amount)}</span></span>
+          <span class="amt num">${TL(p.teacherCut)}</span>
+          <button class="btn sm" data-act="tpaid" data-id="${p.id}" aria-pressed="${!!p.teacherPaid}">${p.teacherPaid?"Gönderildi":"Gönder"}</button></div>`).join("") : `<div class="empty">Bu ay ödeme yok.</div>`}</div>
+        <div class="sec-head"><span class="hint">Toplam pay</span><strong class="num">${TL(tot)}</strong></div>
+      </section>`; }).join("")}</div>` : `<div class="panel empty">Henüz hocası olan öğrenci yok. Öğrenci profilinde "Dersine giren hoca" alanını doldurunca burada görünür.</div>`}
+  </div>`;
+}
+
+// ---------- sheets ----------
+function openSheet(s){ sheet = s; drawSheet(); }
+function closeSheet(){ sheet = null; $("#sheetRoot").innerHTML = ""; }
+function refreshSheet(){ if (sheet && (sheet.type === "profile" || sheet.type === "classView")) drawSheet(); }
+function drawSheet(){
+  if (!sheet) return;
+  const fn = {profile:shProfile, studentForm:shStudentForm, payForm:shPayForm, classView:shClassView, classForm:shClassForm, payPick:shPayPick, emptyPick:shEmptyPick}[sheet.type];
+  const body = fn();
+  if (body == null) { closeSheet(); return; }
+  const root = $("#sheetRoot");
+  const prevScroll = root.querySelector(".sheet")?.scrollTop || 0;
+  root.innerHTML = `<div class="scrim" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true">${body}</div></div>`;
+  root.querySelector(".sheet").scrollTop = prevScroll;
+}
+const shHead = (title, extra="") => `<div class="sh"><h2>${title}</h2><div class="toolbar">${extra}<button class="btn sm" data-act="close">Kapat</button></div></div>`;
+
+function shProfile(){
+  const st = S.students[sheet.id]; if (!st) return null;
+  const r = status(st); const pays = paymentsOf(st.id); const cls = S.classes[st.classId];
+  const p = st.pay||{};
+  const payDesc = p.mode==="paket" ? `${p.packageHours||8} saatlik paket · ${TL((p.packageHours||8)*(st.rate||0))}`
+    : p.mode==="haftalik" ? `Her hafta ${DAYS[p.dueDay||1]} · ${TL(p.amount)}` : `Her ayın ${p.dueDay||1}. günü · ${TL(p.amount)}`;
+  const next = occurrences(cls, TODAY, addDays(TODAY,14)).filter(o=>!isDone(o)).slice(0,4);
+  return `${shHead(esc(st.name), `<button class="btn sm" data-act="editStudent" data-id="${st.id}">Düzenle</button>`)}
+    <div class="toolbar"><span class="chip cls-${clsColor(st.classId)}">${esc(clsName(st.classId))}</span>${st.active===false?`<span class="pill none">Pasif</span>`:""}</div>
+    ${st.active!==false?`<section class="panel stack" style="gap:10px">
+      <div class="sec-head"><h3>Sıradaki ödeme</h3>${pillFor(r)}</div>
+      <div class="sec-head"><div><div style="font-family:var(--f-display);font-size:24px;font-weight:700" class="num">${TL(r.amount)}</div>
+        <div class="hint">${esc(r.periodLabel)}${r.dueDate?` · son gün ${fmtDate(r.dueDate)}`:""}</div>
+        ${r.mode==="paket"?`<div class="hint num">Ödenen ${fmtH(r.paidH)} saat · yapılan ${fmtH(r.done)} saat · <strong>${fmtH(r.remaining)} saat kaldı</strong></div>`:""}</div>
+        <button class="btn pri" data-act="pay" data-id="${st.id}">Ödeme al</button></div>
+    </section>`:""}
+    <section class="panel"><dl class="kv">
+      <dt>Ders ücreti</dt><dd class="num">${TL(st.rate)} / ${st.rateUnit==="hafta"?"hafta":"saat"}</dd>
+      <dt>Ödeme düzeni</dt><dd>${esc(PAYMODES[p.mode||"aylik"])}<br><span class="hint">${payDesc}</span></dd>
+      ${st.teacher?`<dt>Hoca</dt><dd>${esc(st.teacher)} · pay ${TL(st.teacherShare)} / ${st.rateUnit==="hafta"?"hafta":"saat"}</dd>`:""}
+      <dt>Başlangıç</dt><dd>${fmtDate(st.startDate)} ${st.startDate?st.startDate.slice(0,4):""}</dd>
+      <dt>Veli</dt><dd>${esc(st.parentName||"–")}</dd>
+      <dt>Telefon</dt><dd class="num">${esc(st.phone||"–")}</dd>
+      ${st.notes?`<dt>Not</dt><dd style="font-weight:500">${esc(st.notes)}</dd>`:""}
+    </dl></section>
+    <section class="panel stack" style="gap:6px"><h3>Ders saatleri</h3>
+      <div class="hint">${(cls?.slots||[]).length ? cls.slots.map(s=>`${DAYS[s.day]} ${s.start}–${s.end}`).join(" · ") : "Programda saati yok."}</div>
+      ${next.length?`<div class="hint">Sıradaki: ${next.map(o=>`${fmtDate(o.date)} ${o.start}`).join(", ")}</div>`:""}
+    </section>
+    <section class="panel stack" style="gap:6px"><h3>Ödeme geçmişi</h3>
+      <div class="list">${pays.length ? pays.map(x=>`<div class="row" style="cursor:default">
+        <span class="num hint" style="width:56px">${fmtDate(x.date)}</span>
+        <span class="main"><span class="name">${esc(x.label||"")}</span>${x.note?`<span class="sub">${esc(x.note)}</span>`:""}</span>
+        <span class="amt num">${TL(x.amount)}</span>
+        ${sheet.confirmDel===x.id ? `<button class="btn sm danger" data-act="delPay" data-id="${x.id}">Evet, sil</button>` : `<button class="btn sm ghost" data-act="askDelPay" data-id="${x.id}" aria-label="Ödemeyi sil">Sil</button>`}
+      </div>`).join("") : `<div class="empty">Henüz ödeme kaydı yok.</div>`}</div>
+    </section>`;
+}
+
+function shStudentForm(){
+  const st = sheet.id ? S.students[sheet.id] : null;
+  const d = st || { name:"", classId: sheet.classId||"", rate:"", rateUnit:"saat", teacher:"", teacherShare:"", pay:{mode:"aylik", dueDay:1, amount:"", packageHours:8}, startDate:TODAY, parentName:"", phone:"", notes:"", active:true };
+  const p = d.pay || {};
+  const classes = Object.values(S.classes).sort((a,b)=>a.name.localeCompare(b.name,"tr"));
+  const teachers = [...new Set(Object.values(S.students).map(s=>s.teacher).filter(Boolean))];
+  return `${shHead(st?"Öğrenciyi düzenle":"Yeni öğrenci")}
+  <form id="stForm" class="stack" novalidate>
+    <label class="f">Ad soyad<input id="f_name" required value="${esc(d.name)}"></label>
+    <label class="f">Grup / ders<select id="f_cls"><option value="">Seç</option>${classes.map(c=>`<option value="${c.id}" ${c.id===d.classId?"selected":""}>${esc(c.name)} (${KINDS[c.kind]||""})</option>`).join("")}<option value="__new">+ Bu öğrenci için yeni özel ders aç</option></select></label>
+    <div class="fgrid">
+      <label class="f">Ders ücreti (TL)<input id="f_rate" type="number" inputmode="numeric" min="0" value="${esc(d.rate)}"></label>
+      <label class="f">Ücret birimi<select id="f_unit"><option value="saat" ${d.rateUnit!=="hafta"?"selected":""}>Saat başı</option><option value="hafta" ${d.rateUnit==="hafta"?"selected":""}>Hafta başı</option></select></label>
+    </div>
+    <h3>Ödeme düzeni</h3>
+    <div class="seg" id="f_mode">${Object.entries(PAYMODES).map(([k,v])=>`<label><input type="radio" name="mode" value="${k}" ${ (p.mode||"aylik")===k?"checked":""}>${v}</label>`).join("")}</div>
+    <div class="fgrid" id="modeFields"></div>
+    <div class="fgrid">
+      <label class="f">Dersine giren hoca<input id="f_teacher" list="tlist" placeholder="Kevser Hanım ise boş bırak" value="${esc(d.teacher||"")}"><datalist id="tlist">${teachers.map(t=>`<option value="${esc(t)}">`).join("")}</datalist></label>
+      <label class="f">Hoca payı (TL, aynı birimle)<input id="f_share" type="number" min="0" value="${esc(d.teacherShare||"")}"></label>
+    </div>
+    <div class="fgrid">
+      <label class="f">Başlangıç tarihi<input id="f_start" type="date" value="${esc(d.startDate||TODAY)}"></label>
+      <label class="f">Veli adı<input id="f_parent" value="${esc(d.parentName||"")}"></label>
+      <label class="f">Telefon<input id="f_phone" type="tel" value="${esc(d.phone||"")}"></label>
+    </div>
+    <label class="f">Not<textarea id="f_notes" rows="3">${esc(d.notes||"")}</textarea></label>
+    ${st?`<div class="seg"><label><input type="checkbox" id="f_active" ${d.active!==false?"checked":""}>Aktif öğrenci</label></div><p class="hint" style="margin:-8px 0 0">Ayrılan öğrencinin işaretini kaldır. Silinmez, geçmişi korunur.</p>`:""}
+    <div id="formErr" class="hint" style="color:var(--late)"></div>
+    <div class="toolbar"><button class="btn pri" type="submit">Kaydet</button><button class="btn" type="button" data-act="close">Vazgeç</button></div>
+  </form>`;
+}
+function modeFieldsHTML(mode, p, rate){
+  if (mode === "paket") return `<label class="f">Paket kaç saat<input id="f_pk" type="number" min="1" value="${esc(p.packageHours||8)}"></label><div class="hint" style="align-self:end">Paket tutarı = saat × ücret. Kalan saat programdan otomatik düşer.</div>`;
+  if (mode === "haftalik") return `<label class="f">Haftalık tutar (TL)<input id="f_amt" type="number" min="0" value="${esc(p.amount||"")}"></label><label class="f">Ödeme günü<select id="f_day">${[1,2,3,4,5,6,7].map(i=>`<option value="${i}" ${Number(p.dueDay||1)===i?"selected":""}>${DAYS[i]}</option>`).join("")}</select></label>`;
+  return `<label class="f">Aylık tutar (TL)<input id="f_amt" type="number" min="0" value="${esc(p.amount||"")}" placeholder="${rate?`ör. ${rate*8}`:""}"></label><label class="f">Ayın kaçında ödüyor<input id="f_day" type="number" min="1" max="31" value="${esc(p.dueDay||1)}"></label>`;
+}
+
+function shPayPick(){
+  const all = activeStudents();
+  return `${shHead("Kimden ödeme alındı?")}
+    <input type="search" id="pq" placeholder="Öğrenci ara" aria-label="Öğrenci ara">
+    <div class="panel"><div class="list" id="pickList">${all.map(st => { const r = status(st); return `<button class="row" data-act="pay" data-id="${st.id}" data-name="${esc(st.name.toLocaleLowerCase("tr"))}">
+      <span class="chip cls-${clsColor(st.classId)}">${esc(clsName(st.classId))}</span><span class="main"><span class="name">${esc(st.name)}</span></span>${pillFor(r)}</button>`; }).join("")}</div></div>`;
+}
+
+function shPayForm(){
+  const st = S.students[sheet.id]; if (!st) return null;
+  const r = status(st); const mode = r.mode;
+  let periodField = "";
+  if (mode === "aylik"){
+    const opts = []; let k = r.period || TODAY.slice(0,7); let [y,m] = k.split("-").map(Number); m -= 1; if (m<1){m=12;y--;}
+    for (let i=0;i<5;i++){ const key = `${y}-${pad(m)}`; opts.push(key); m++; if(m>12){m=1;y++;} }
+    const paid = new Set(paymentsOf(st.id).map(x=>x.period));
+    periodField = `<label class="f">Hangi ay için<select id="p_period">${opts.map(o=>`<option value="${o}" ${o===r.period?"selected":""} ${paid.has(o)?"disabled":""}>${monthLabel(o)}${paid.has(o)?" (ödendi)":""}</option>`).join("")}</select></label>`;
+  } else if (mode === "haftalik"){
+    const paid = new Set(paymentsOf(st.id).map(x=>x.period));
+    const start = addDays(r.period || mondayOf(TODAY), -7); const opts = [0,1,2,3,4,5].map(i=>addDays(start,7*i));
+    periodField = `<label class="f">Hangi hafta için<select id="p_period">${opts.map(o=>`<option value="${o}" ${o===r.period?"selected":""} ${paid.has(o)?"disabled":""}>${fmtDate(o)} haftası${paid.has(o)?" (ödendi)":""}</option>`).join("")}</select></label>`;
+  } else {
+    periodField = `<label class="f">Kaç saatlik ödeme<input id="p_hours" type="number" min="0" step="0.5" value="${r.hours}"></label>`;
+  }
+  return `${shHead("Ödeme al")}
+    <div class="toolbar"><span class="chip cls-${clsColor(st.classId)}">${esc(clsName(st.classId))}</span><strong>${esc(st.name)}</strong></div>
+    <form id="payForm" class="stack" novalidate>
+      <div class="fgrid">${periodField}
+        <label class="f">Tutar (TL)<input id="p_amt" type="number" min="0" value="${r.amount}"></label>
+        <label class="f">Ödeme tarihi<input id="p_date" type="date" value="${TODAY}"></label></div>
+      ${st.teacher?`<div class="hint" id="cutHint">${esc(st.teacher)} payı: <strong class="num">${TL(teacherCut(st, r.amount))}</strong></div>`:""}
+      <label class="f">Not (isteğe bağlı)<input id="p_note" placeholder="ör. indirim, 5 haftalık ay, eksik ödeme"></label>
+      <div id="formErr" class="hint" style="color:var(--late)"></div>
+      <div class="toolbar"><button class="btn pri" type="submit">Ödendi olarak kaydet</button><button class="btn" type="button" data-act="close">Vazgeç</button></div>
+    </form>`;
+}
+
+function shClassView(){
+  const c = S.classes[sheet.id]; if (!c) return null;
+  const sts = studentsOf(c.id);
+  return `${shHead(esc(c.name), `<button class="btn sm" data-act="editClass" data-id="${c.id}">Düzenle</button>`)}
+    <div class="toolbar"><span class="chip cls-${c.color||"gri"}">${KINDS[c.kind]||""}</span>${c.capacity?`<span class="hint num">Doluluk ${sts.length}/${c.capacity}</span>`:""}</div>
+    <section class="panel stack" style="gap:6px"><h3>Ders saatleri</h3><div>${(c.slots||[]).length ? c.slots.map(s=>`${DAYS[s.day]} ${s.start}–${s.end}`).join("<br>") : `<span class="hint">Henüz saat eklenmedi.</span>`}</div></section>
+    <section class="panel stack" style="gap:6px"><div class="sec-head"><h3>Öğrenciler (${sts.length})</h3><button class="btn sm" data-act="newStudent" data-cls="${c.id}">+ Öğrenci ekle</button></div>
+      <div class="list">${sts.length ? sts.map(st=>{ const r = status(st); return `<button class="row" data-act="profile" data-id="${st.id}"><span class="main"><span class="name">${esc(st.name)}</span><span class="sub">${TL(st.rate)}/${st.rateUnit==="hafta"?"hafta":"saat"}</span></span>${pillFor(r)}</button>`; }).join("") : `<div class="empty">Kayıtlı öğrenci yok.</div>`}</div></section>`;
+}
+
+function shClassForm(){
+  const c = sheet.id ? S.classes[sheet.id] : null;
+  const d = c || {name:"", kind:"grup", color:"mavi", capacity:"", slots: sheet.slot ? [sheet.slot] : []};
+  const slots = sheet.slotsDraft || (sheet.slotsDraft = JSON.parse(JSON.stringify(d.slots||[])));
+  const n = c ? studentsOf(c.id).length : 0;
+  return `${shHead(c?"Dersi düzenle":"Yeni grup / ders")}
+  <form id="clsForm" class="stack" novalidate>
+    <label class="f">Ad<input id="c_name" value="${esc(sheet.nameDraft ?? d.name)}" placeholder="ör. Rainbow ya da Özel – Ali"></label>
+    <div class="fgrid"><label class="f">Tür<select id="c_kind">${Object.entries(KINDS).map(([k,v])=>`<option value="${k}" ${ (sheet.kindDraft||d.kind)===k?"selected":""}>${v}</option>`).join("")}</select></label>
+      <label class="f">Kapasite (isteğe bağlı)<input id="c_cap" type="number" min="0" value="${esc(sheet.capDraft ?? d.capacity ?? "")}"></label></div>
+    <div class="f" style="font-size:13px;font-weight:600;color:var(--muted)">Renk<div class="swatches" style="margin-top:4px">${COLORS.map(k=>`<label class="cls-${k}" title="${k}"><input type="radio" name="c_color" value="${k}" ${ (sheet.colorDraft||d.color)===k?"checked":""}></label>`).join("")}</div></div>
+    <h3>Ders saatleri</h3>
+    <div class="stack" style="gap:8px" id="slotList">${slots.map((s,i)=>`<div class="slotrow">
+      <select data-slot="${i}" data-k="day" aria-label="Gün">${[1,2,3,4,5,6,7].map(x=>`<option value="${x}" ${Number(s.day)===x?"selected":""}>${DAYS[x]}</option>`).join("")}</select>
+      <input type="time" data-slot="${i}" data-k="start" value="${esc(s.start)}" aria-label="Başlangıç" step="900">
+      <input type="time" data-slot="${i}" data-k="end" value="${esc(s.end)}" aria-label="Bitiş" step="900">
+      <button class="btn sm ghost" type="button" data-act="rmSlot" data-i="${i}" aria-label="Saati kaldır">✕</button></div>`).join("") || `<div class="hint">Saat eklenmedi.</div>`}</div>
+    <div><button class="btn sm" type="button" data-act="addSlot">+ Saat ekle</button></div>
+    <div id="formErr" class="hint" style="color:var(--late)"></div>
+    <div class="toolbar"><button class="btn pri" type="submit">Kaydet</button><button class="btn" type="button" data-act="close">Vazgeç</button>
+      ${c ? (n ? `<span class="hint">Silmek için önce ${n} öğrenciyi başka derse taşı.</span>` : (sheet.confirmDel ? `<span class="confirm">Ders silinsin mi? <button class="btn sm danger" type="button" data-act="delClass">Evet, sil</button></span>` : `<button class="btn ghost danger" type="button" data-act="askDelClass">Dersi sil</button>`)) : ""}</div>
+  </form>`;
+}
+function captureClassDraft(){
+  if (!sheet || sheet.type!=="classForm") return;
+  sheet.nameDraft = $("#c_name")?.value; sheet.kindDraft = $("#c_kind")?.value; sheet.capDraft = $("#c_cap")?.value;
+  sheet.colorDraft = document.querySelector('input[name=c_color]:checked')?.value;
+}
+
+// ---------- events ----------
+function toast(msg){ const r = $("#toastRoot"); r.innerHTML = `<div class="toast" role="status">${esc(msg)}</div>`; clearTimeout(toast.t); toast.t = setTimeout(()=>{ r.innerHTML=""; }, 2600); }
+
+document.addEventListener("click", async e => {
+  const t = e.target.closest("[data-act]"); if (!t) return;
+  const a = t.dataset.act;
+  if (a === "scrim"){ if (e.target === t) closeSheet(); return; }
+  if (a === "emptySlot"){
+    if (e.target.closest(".blk")) return;
+    const rect = t.getBoundingClientRect(); const y = e.clientY - rect.top;
+    const h = Math.max(GRID_START, Math.min(GRID_END-1, GRID_START + Math.floor(y / HPX)));
+    openSheet({type:"emptyPick", day:Number(t.dataset.day), h}); return;
+  }
+  switch(a){
+    case "close": closeSheet(); break;
+    case "day": S.day = t.dataset.d==="0" ? TODAY : addDays(S.day, Number(t.dataset.d)); render(); break;
+    case "profile": openSheet({type:"profile", id:t.dataset.id}); break;
+    case "newStudent": openSheet({type:"studentForm", classId:t.dataset.cls||""}); initStudentForm(); break;
+    case "editStudent": openSheet({type:"studentForm", id:t.dataset.id}); initStudentForm(); break;
+    case "pay": openSheet({type:"payForm", id:t.dataset.id}); break;
+    case "payPick": openSheet({type:"payPick"}); setTimeout(()=>$("#pq")?.focus(),0); break;
+    case "togglePassive": S.showPassive = !S.showPassive; render(); break;
+    case "classView": e.stopPropagation(); openSheet({type:"classView", id:t.dataset.id}); break;
+    case "newClass": openSheet({type:"classForm"}); break;
+    case "editClass": openSheet({type:"classForm", id:t.dataset.id}); break;
+    case "addSlot": captureClassDraft(); sheet.slotsDraft.push({day:1, start:"17:00", end:"18:00"}); drawSheet(); break;
+    case "rmSlot": captureClassDraft(); sheet.slotsDraft.splice(Number(t.dataset.i),1); drawSheet(); break;
+    case "askDelClass": captureClassDraft(); sheet.confirmDel = true; drawSheet(); break;
+    case "delClass": if (await remove("classes", sheet.id)) { toast("Ders silindi."); closeSheet(); } break;
+    case "askDelPay": sheet.confirmDel = t.dataset.id; drawSheet(); break;
+    case "delPay": if (await remove("payments", t.dataset.id)) { toast("Ödeme silindi."); sheet.confirmDel = null; } break;
+    case "tpaid": { const p = S.payments[t.dataset.id]; if (p) { const {id, ...rest} = p; await save("payments", id, {...rest, teacherPaid: !p.teacherPaid}); } break; }
+    case "cancel": {
+      const id = evId(t.dataset.c, t.dataset.date, t.dataset.s); const ev = S.events[id] || {classId:t.dataset.c, date:t.dataset.date, start:t.dataset.s, absent:{}};
+      const {id:_, ...rest} = ev; await save("events", id, {...rest, cancelled: !ev.cancelled}); break; }
+    case "pickClassForSlot": {
+      const c = S.classes[t.dataset.id]; const sl = {day:sheet.day, start:`${pad(sheet.h)}:00`, end:`${pad(sheet.h+1)}:00`};
+      const {id, ...rest} = c; if (await save("classes", id, {...rest, slots:[...(c.slots||[]), sl]})) { toast(`${c.name} ${DAYS[sl.day]} ${sl.start} saatine eklendi.`); closeSheet(); } break; }
+    case "newClassForSlot": openSheet({type:"classForm", slot:{day:sheet.day, start:`${pad(sheet.h)}:00`, end:`${pad(sheet.h+1)}:00`}}); break;
+  }
+});
+
+function shEmptyPick(){
+  const classes = Object.values(S.classes).sort((a,b)=>a.name.localeCompare(b.name,"tr"));
+  const busy = lessonsAt(sheet.day, sheet.h);
+  return `${shHead(`${DAYS[sheet.day]} ${pad(sheet.h)}.00–${pad(sheet.h+1)}.00`)}
+    ${busy.length?`<div class="banner">Bu saatte ders var: ${busy.map(c=>esc(c.name)).join(", ")}</div>`:`<div class="hint">Bu saat boş. Yeni bir ders açabilir ya da var olan bir grubu bu saate ekleyebilirsin.</div>`}
+    <div><button class="btn pri" data-act="newClassForSlot">+ Bu saatte yeni ders aç</button></div>
+    <section class="panel stack" style="gap:6px"><h3>Var olan bir dersi bu saate ekle</h3><div class="list">${classes.map(c=>`<button class="row" data-act="pickClassForSlot" data-id="${c.id}"><span class="chip cls-${c.color||"gri"}">${KINDS[c.kind]||""}</span><span class="main"><span class="name">${esc(c.name)}</span><span class="sub">${studentsOf(c.id).length} kişi${c.capacity?` / ${c.capacity}`:""}</span></span></button>`).join("")}</div></section>`;
+}
+function lessonsAt(day, h){ return Object.values(S.classes).filter(c => (c.slots||[]).some(s => Number(s.day)===day && toMin(s.start) < (h+1)*60 && toMin(s.end) > h*60)); }
+
+document.addEventListener("input", e => {
+  if (e.target.id === "q"){ S.search = e.target.value; render(); }
+  if (e.target.id === "pq"){ const q = e.target.value.toLocaleLowerCase("tr"); document.querySelectorAll("#pickList .row").forEach(r => r.hidden = !r.dataset.name.includes(q)); }
+  if (e.target.id === "p_amt" && sheet?.type==="payForm"){ const st = S.students[sheet.id]; const h = $("#cutHint strong"); if (h && st) h.textContent = TL(teacherCut(st, Number(e.target.value)||0)); }
+  if (e.target.dataset.slot != null && sheet?.slotsDraft){ sheet.slotsDraft[Number(e.target.dataset.slot)][e.target.dataset.k] = e.target.dataset.k==="day" ? Number(e.target.value) : e.target.value; }
+});
+document.addEventListener("change", async e => {
+  const t = e.target;
+  if (t.id === "fcls"){ S.filterCls = t.value; render(); }
+  if (t.id === "pmonth"){ S.month = t.value; render(); }
+  if (t.dataset.slot != null && sheet?.slotsDraft){ sheet.slotsDraft[Number(t.dataset.slot)][t.dataset.k] = t.dataset.k==="day" ? Number(t.value) : t.value; }
+  if (t.name === "mode") renderModeFields();
+  if (t.dataset.act === "absent"){
+    const id = evId(t.dataset.c, t.dataset.date, t.dataset.s); const ev = S.events[id] || {classId:t.dataset.c, date:t.dataset.date, start:t.dataset.s, cancelled:false};
+    const absent = {...(ev.absent||{})}; if (t.value === "geldi") delete absent[t.dataset.st]; else absent[t.dataset.st] = t.value;
+    const {id:_, ...rest} = ev; if (await save("events", id, {...rest, absent})) toast("Kaydedildi.");
+  }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && sheet) closeSheet(); });
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("button[data-tab]"); if (!b) return; S.tab = b.dataset.tab; try{ localStorage.setItem("kw_tab", S.tab); }catch(_){} render(); window.scrollTo(0,0); });
+
+function initStudentForm(){ renderModeFields(); }
+function renderModeFields(){
+  const box = $("#modeFields"); if (!box) return;
+  const st = sheet.id ? S.students[sheet.id] : null;
+  const mode = document.querySelector('input[name=mode]:checked')?.value || "aylik";
+  box.innerHTML = modeFieldsHTML(mode, (st?.pay?.mode===mode ? st.pay : {}), Number($("#f_rate")?.value)||0);
+}
+
+document.addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target; const err = m => { const x = $("#formErr"); if (x) x.textContent = m; };
+  if (f.id === "stForm"){
+    const name = $("#f_name").value.trim(); if (!name) return err("Öğrencinin adını yaz.");
+    let classId = $("#f_cls").value; if (!classId) return err("Bir grup ya da ders seç.");
+    const rate = Number($("#f_rate").value); if (!rate) return err("Ders ücretini yaz.");
+    const mode = document.querySelector('input[name=mode]:checked').value;
+    const pay = {mode};
+    if (mode === "paket") pay.packageHours = Number($("#f_pk").value)||8;
+    else { pay.amount = Number($("#f_amt").value)||0; pay.dueDay = Number($("#f_day").value)||1; if (!pay.amount) return err(mode==="aylik"?"Aylık tutarı yaz.":"Haftalık tutarı yaz."); }
+    if (classId === "__new"){ const cid = uid("c"); if (!(await save("classes", cid, {name:`Özel – ${name}`, kind:"ozel", color:"somon", slots:[]}))) return; classId = cid; }
+    const id = sheet.id || uid("s"); const old = S.students[sheet.id] || {};
+    const data = {...(({id:_, ...r})=>r)(old), name, classId, rate, rateUnit:$("#f_unit").value, teacher:$("#f_teacher").value.trim(), teacherShare:Number($("#f_share").value)||0,
+      pay, startDate:$("#f_start").value||TODAY, parentName:$("#f_parent").value.trim(), phone:$("#f_phone").value.trim(), notes:$("#f_notes").value.trim(),
+      active: $("#f_active") ? $("#f_active").checked : true };
+    if (await save("students", id, data)) { toast(sheet.id ? "Öğrenci güncellendi." : `${name} eklendi.`); openSheet({type:"profile", id}); }
+  }
+  if (f.id === "payForm"){
+    const st = S.students[sheet.id]; const r = status(st);
+    const amount = Number($("#p_amt").value); if (!amount) return err("Tutarı yaz.");
+    const date = $("#p_date").value || TODAY;
+    const rec = {studentId: st.id, date, amount, note: $("#p_note").value.trim(), teacher: st.teacher||"", teacherCut: teacherCut(st, amount), teacherPaid:false, mode: r.mode};
+    if (r.mode === "paket"){ rec.hours = Number($("#p_hours").value)||0; rec.label = `${fmtH(rec.hours)} saatlik paket`; }
+    else { rec.period = $("#p_period").value; rec.label = r.mode==="aylik" ? monthLabel(rec.period) : `${fmtDate(rec.period)} haftası`; }
+    if (await save("payments", uid("p"), rec)) { toast(`${st.name}: ${TL(amount)} kaydedildi.`); openSheet({type:"profile", id: st.id}); }
+  }
+  if (f.id === "clsForm"){
+    captureClassDraft();
+    const name = (sheet.nameDraft||"").trim(); if (!name) return err("Derse bir ad ver.");
+    for (const s of sheet.slotsDraft) if (toMin(s.end) <= toMin(s.start)) return err(`${DAYS[s.day]} saatinde bitiş, başlangıçtan sonra olmalı.`);
+    const id = sheet.id || uid("c");
+    const data = {name, kind: sheet.kindDraft||"grup", color: sheet.colorDraft||"mavi", capacity: Number(sheet.capDraft)||0, slots: sheet.slotsDraft.map(s=>({day:Number(s.day), start:s.start, end:s.end}))};
+    if (await save("classes", id, data)) { toast("Ders kaydedildi."); openSheet({type:"classView", id}); }
+  }
+});
+
+render();
+boot();
+setInterval(() => { if (!sheet) scheduleRender(); }, 5*60*1000);
+})();
+</script>

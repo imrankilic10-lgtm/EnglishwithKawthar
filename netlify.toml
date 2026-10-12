@@ -1,0 +1,19 @@
+# Netlify: uygulama web/ klasöründe; `npm run build` -> web/dist yayınlanır.
+# Ortam değişkenleri Netlify panelinden girilir (Site configuration > Environment variables):
+#   VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY  (sadece bu ikisi; SUPABASE_SECRET_KEY ASLA buraya girilmez)
+# Bu değişkenler yoksa site "Veri bağlantısı ayarlanmamış" gösterir; demo (gerçek veri) üretim derlemesine girmez.
+[build]
+  base = "web"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Temel güvenlik başlıkları
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
