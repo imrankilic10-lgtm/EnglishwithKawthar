@@ -43,7 +43,7 @@ function saleRow(s, many){
 export function vNotebooks(){
   const ps = products();
   if (!ps.length) return `<div class="stack">
-    <div class="sec-head"><h2>Defterler</h2></div>
+    <div class="sec-head"><h2>Defter Takibi</h2></div>
     <div class="panel stack">${empty("Henüz ürün yok. Elindeki defterleri ekleyerek başla: adı, kaç adet olduğu ve birim fiyatı.")}
       <div><button class="btn pri" data-act="productNew">+ Ürün ekle</button></div></div></div>`;
   const q = lower(S.saleQ.trim()), many = ps.length > 1;
@@ -55,7 +55,7 @@ export function vNotebooks(){
       <div class="panel"><div class="plist">${g.map(s => saleRow(s, many)).join("")}</div></div></section>` : "";
   }).join("");
   return `<div class="stack">
-    <div class="sec-head"><h2>Defterler</h2><div class="toolbar"><button class="btn sm ghost" data-act="productNew">+ Ürün</button>
+    <div class="sec-head"><h2>Defter Takibi</h2><div class="toolbar"><button class="btn sm ghost" data-act="productNew">+ Ürün</button>
       <button class="btn pri" data-act="saleNew" data-p="${ps[0].id}">+ Satış ekle</button></div></div>
     ${ps.map(p => productCard(p, many)).join("")}
     ${all.length ? `<div class="filters">
