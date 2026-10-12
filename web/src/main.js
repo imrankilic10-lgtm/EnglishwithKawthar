@@ -19,15 +19,16 @@ import * as paymentSheets from "./sheets/payments.js";
 import * as lessonSheets from "./sheets/lessons.js";
 import * as classSheets from "./sheets/classes.js";
 import * as quickSheets from "./sheets/quick.js";
+import * as notebooks from "./views/notebooks.js";
 
 const $ = s => document.querySelector(s);
-[dashboard, students, program, payments, notes, teachers, settings, studentSheets, paymentSheets, lessonSheets, classSheets, quickSheets].forEach(register);
+[dashboard, students, program, payments, notes, notebooks, teachers, settings, studentSheets, paymentSheets, lessonSheets, classSheets, quickSheets].forEach(register);
 
 try { const t = localStorage.getItem("kw_tab"); if (t && R.views[t]) S.tab = t; } catch(e) {}
 
 // ---------- çizim ----------
 // Sayfanın üstündeki küçük etiket (Bugün ekranında yok; orada karşılama bandı var).
-const PAGES = { ozet: "", ogrenciler: "Kayıtlar", program: "Haftalık plan", odemeler: "Tahsilat", notlar: "Defter", hocalar: "Ekip", ayarlar: "Sistem" };
+const PAGES = { ozet: "", ogrenciler: "Kayıtlar", program: "Haftalık plan", odemeler: "Tahsilat", notlar: "Defter", defterler: "Satış", hocalar: "Ekip", ayarlar: "Sistem" };
 function render(){
   document.querySelectorAll(".todayLbl").forEach(el => { el.textContent = fmtDateLong(D.today()); });
   document.querySelectorAll("[data-tab]").forEach(b => { if (b.dataset.tab === S.tab) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });

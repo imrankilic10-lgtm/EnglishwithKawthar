@@ -14,6 +14,8 @@
 //                     studentIds: [], note, cancelled, absent }
 //   settings/main     { kinds: [{ key, label, defaultRate }], teachers: [{ name, share }] }
 //   notes/{id}        günlük not: { date: YYYY-MM-DD, text, pinned, createdAt (ISO) }
+//   products/{id}     satılan ürün (ör. kelime defteri): { name, stock (toplam adet), price (varsayılan birim fiyat), active }
+//   sales/{id}        ürün satışı: { productId, studentId, date, qty, unitPrice, paid, paidDate?, note }
 
 import { pad, addDays, mondayOf, wd, toMin, hoursOf, fmtDate, monthLabel, monthEnd } from "./lib/dates.js";
 
@@ -278,6 +280,21 @@ export function createDomain(S, clock){
     });
   }
 
+  // ---------- ürün satışları (Defterler) ----------
+  const salesOf = pid => Object.values(S.sales || {}).filter(s => !pid || s.productId === pid)
+    .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  const saleTotal = s => (Number(s.qty) || 0) * (Number(s.unitPrice) || 0);
+  // Bir ürünün durumu: stok, satılan, kalan; tahsil edilen ve ödenmemiş tutar.
+  function productStats(pid){
+    const stock = Number(S.products?.[pid]?.stock) || 0, list = salesOf(pid);
+    const sold = list.reduce((a, s) => a + (Number(s.qty) || 0), 0);
+    const total = list.reduce((a, s) => a + saleTotal(s), 0);
+    const paid = list.filter(s => s.paid).reduce((a, s) => a + saleTotal(s), 0);
+    const unpaidList = list.filter(s => !s.paid);
+    return { stock, sold, left: stock - sold, total, paid, unpaid: total - paid,
+      unpaidCount: new Set(unpaidList.map(s => s.studentId)).size, buyers: new Set(list.map(s => s.studentId)).size };
+  }
+
   // ---------- ayarlar ----------
   const settings = () => S.settings?.main || {};
   function kinds(){
@@ -300,6 +317,7 @@ export function createDomain(S, clock){
     lessonsOfEnrollment, hoursDone, weeklyHours,
     periods, periodDue, levelOf, status, dues, pendingDues, studentStatus, teacherCut, monthSummary,
     seasonOf, seasonMonths, monthCells, paymentMonth, dueMonth,
+    salesOf, saleTotal, productStats,
     kinds, kindLabel, teachers,
   };
 }

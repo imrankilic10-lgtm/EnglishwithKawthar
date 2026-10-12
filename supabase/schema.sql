@@ -4,7 +4,7 @@
 --
 -- Bu şemanın ilk sürümünü (v1, öğrenci = ders kaydı) daha önce çalıştırdıysan ve henüz gerçek veri yoksa,
 -- önce şu satırı çalıştırıp tabloları sil, sonra bu dosyanın tamamını çalıştır:
---   drop table if exists public.notes, public.extras, public.events, public.payments, public.enrollments, public.students, public.classes, public.settings cascade;
+--   drop table if exists public.sales, public.products, public.notes, public.extras, public.events, public.payments, public.enrollments, public.students, public.classes, public.settings cascade;
 
 -- ---------- kimler girebilir: izinli e-postalar ----------
 -- Sisteme SADECE bu listedeki e-postalar girebilir (şimdilik Kevser Hanım ve İmran).
@@ -172,6 +172,30 @@ create table if not exists public.notes (
   updated_at timestamptz not null default now()
 );
 
+-- Satılan ürünler (Defterler sayfası): ör. kelime defteri. stock = elde olan toplam adet (satıldıkça kalan hesaplanır).
+create table if not exists public.products (
+  id         text primary key,
+  name       text not null,
+  stock      integer not null default 0 check (stock >= 0),
+  price      numeric not null default 0 check (price >= 0),   -- varsayılan birim fiyat
+  active     boolean not null default true,
+  updated_at timestamptz not null default now()
+);
+
+-- Ürün satışları: hangi öğrenci, kaç adet, kaça, ödendi mi.
+create table if not exists public.sales (
+  id         text primary key,
+  product_id text not null references public.products(id) on delete restrict,
+  student_id text not null references public.students(id) on delete restrict,
+  date       date not null,
+  qty        integer not null default 1 check (qty > 0),
+  unit_price numeric not null default 0 check (unit_price >= 0),
+  paid       boolean not null default false,
+  paid_date  date,
+  note       text not null default '',
+  updated_at timestamptz not null default now()
+);
+
 -- Ayarlar (tek satır: id = 'main'): ders türleri, hocalar, varsayılan ücretler.
 create table if not exists public.settings (
   id         text primary key,
@@ -188,12 +212,14 @@ create index if not exists payments_date_idx on public.payments(date);
 create index if not exists events_class_date_idx on public.events(class_id, date);
 create index if not exists extras_class_date_idx on public.extras(class_id, date);
 create index if not exists notes_date_idx on public.notes(date);
+create index if not exists sales_product_idx on public.sales(product_id);
+create index if not exists sales_student_idx on public.sales(student_id);
 
 create or replace function public.touch_updated_at() returns trigger
   language plpgsql as $$ begin new.updated_at = now(); return new; end $$;
 
 do $$ declare t text; begin
-  foreach t in array array['classes', 'students', 'enrollments', 'payments', 'events', 'extras', 'settings', 'notes'] loop
+  foreach t in array array['classes', 'students', 'enrollments', 'payments', 'events', 'extras', 'settings', 'notes', 'products', 'sales'] loop
     execute format('drop trigger if exists touch on public.%I', t);
     execute format('create trigger touch before update on public.%I for each row execute function public.touch_updated_at()', t);
   end loop;
@@ -205,7 +231,7 @@ end $$;
 -- Giriş yapmamış biri hiçbir şey göremez.
 alter table public.profiles enable row level security;
 do $$ declare t text; begin
-  foreach t in array array['classes', 'students', 'enrollments', 'payments', 'events', 'extras', 'settings', 'notes'] loop
+  foreach t in array array['classes', 'students', 'enrollments', 'payments', 'events', 'extras', 'settings', 'notes', 'products', 'sales'] loop
     execute format('alter table public.%I enable row level security', t);
     execute format('drop policy if exists admin_all on public.%I', t);
     execute format('create policy admin_all on public.%I for all to authenticated using (public.my_role() = ''admin'') with check (public.my_role() = ''admin'')', t);
@@ -238,7 +264,7 @@ create policy hoca_read on public.extras for select to authenticated
 -- ---------- canlı güncelleme ----------
 -- İki telefon aynı anda açıkken birinin yaptığı değişiklik diğerinde de görünsün.
 do $$ declare t text; begin
-  foreach t in array array['classes', 'students', 'enrollments', 'payments', 'events', 'extras', 'settings', 'notes'] loop
+  foreach t in array array['classes', 'students', 'enrollments', 'payments', 'events', 'extras', 'settings', 'notes', 'products', 'sales'] loop
     if not exists (select 1 from pg_publication_tables where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = t) then
       execute format('alter publication supabase_realtime add table public.%I', t);
     end if;

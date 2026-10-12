@@ -1,6 +1,6 @@
 # Depo herkese açık: gerçek kişilere ait hiçbir bilgi (öğrenci/hoca adları, ödemeler, notlar) GitHub'a GİTMEZ.
 # Gerçek veri dışa aktarımları + taşıma ayarları
-data/
+/data/
 # Eski Excel / PDF tabloları
 docs/eski-tablolar/
 # Proje notu ve devir notu (öğrenci adları ve ödeme ayrıntıları içerir)
@@ -27,3 +27,6 @@ web/dist-share/
 Thumbs.db
 .vscode/
 .idea/
+
+# Gerçek e-postalı Supabase kurulum kopyası
+supabase/kurulum.sql

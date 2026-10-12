@@ -93,6 +93,14 @@ function tasks(){
     title: `Ödeme al · ${st.name}`, sub: `${TL(d.amount)} · ${d.periodLabel}${d.paid ? " kalan" : ""} · ${dueWhen(d)}`,
     btn: "Al", act: `data-act="pay" data-id="${st.id}" data-e="${e.id}" data-p="${d.period || ""}"` }));
   if (soon.length > 2) out.push({ tone: "amber", icon: "i-wallet", title: `${soon.length - 2} ödeme daha bu hafta bekleniyor`, sub: "Ödemeler sayfasında hepsi", btn: "Gör", act: `data-act="goPayments"` });
+  // Ödenmemiş defter / ürün satışları
+  const unpaidSales = D.salesOf().filter(s => !s.paid && S.products[s.productId]);
+  if (unpaidSales.length){
+    const who = [...new Set(unpaidSales.map(s => S.students[s.studentId]?.name).filter(Boolean))];
+    out.push({ tone: "amber", icon: "i-book", title: `Defter ücreti · ${who.length} kişi`,
+      sub: `${who.slice(0, 3).join(", ")}${who.length > 3 ? ` ve ${who.length - 3} kişi daha` : ""} · ${TL(unpaidSales.reduce((a, s) => a + D.saleTotal(s), 0))}`,
+      btn: "Gör", act: `data-act="goNotebooks"` });
+  }
   const tnames = [...new Set(Object.values(S.payments).filter(p => p.teacher && Number(p.teacherCut) > 0 && !p.teacherPaid).map(p => p.teacher))].sort((a, b) => a.localeCompare(b, "tr"));
   tnames.forEach(n => { const ps = unpaidCuts(n);
     out.push({ tone: "sky", icon: "i-send", title: `Pay gönder · ${n}`, sub: `${TL(ps.reduce((a, p) => a + Number(p.teacherCut), 0))} · ${ps.length} ödemeden`,

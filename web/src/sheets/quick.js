@@ -69,6 +69,7 @@ const QUICK = [
   { act: `data-act="newExtra"`, icon: "i-cal", tone: "t-plain", label: "Telafi / ekstra", note: "Tek seferlik ders" },
   { act: `data-act="newStudent"`, icon: "i-userplus", tone: "t-plain", label: "Yeni öğrenci", note: "Kayıt ve ders" },
   { act: `data-act="remind"`, icon: "i-msg", tone: "t-plain", label: "Hatırlatma", note: "Geciken velilere mesaj" },
+  { act: `data-act="saleNew"`, icon: "i-book", tone: "t-plain", label: "Defter satışı", note: "Kim aldı, ödedi mi" },
   { act: `data-act="newClass"`, icon: "i-book", tone: "t-plain", label: "Yeni grup / ders", note: "Haftalık programa" },
 ];
 function shQuick(){

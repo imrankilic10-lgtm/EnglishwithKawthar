@@ -11,7 +11,8 @@ export const clock = {
 
 // Veri koleksiyonları + ekran durumu (filtreler, seçili gün/hafta/ay).
 export const S = {
-  classes: {}, students: {}, enrollments: {}, payments: {}, events: {}, extras: {}, settings: {}, notes: {},
+  classes: {}, students: {}, enrollments: {}, payments: {}, events: {}, extras: {}, settings: {}, notes: {}, products: {}, sales: {},
+  saleQ: "", saleState: "",
   loaded: new Set(),
   tab: "ozet",
   day: clock.today(), week: mondayOf(clock.today()), month: clock.today().slice(0, 7),
