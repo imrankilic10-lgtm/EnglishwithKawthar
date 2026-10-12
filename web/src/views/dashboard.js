@@ -96,7 +96,7 @@ function tasks(){
   // Ödenmemiş defter / ürün satışları
   const unpaidSales = D.salesOf().filter(s => !s.paid && S.products[s.productId]);
   if (unpaidSales.length){
-    const who = [...new Set(unpaidSales.map(s => S.students[s.studentId]?.name).filter(Boolean))];
+    const who = [...new Set(unpaidSales.map(s => D.saleBuyer(s)))];
     out.push({ tone: "amber", icon: "i-book", title: `Defter ücreti · ${who.length} kişi`,
       sub: `${who.slice(0, 3).join(", ")}${who.length > 3 ? ` ve ${who.length - 3} kişi daha` : ""} · ${TL(unpaidSales.reduce((a, s) => a + D.saleTotal(s), 0))}`,
       btn: "Gör", act: `data-act="goNotebooks"` });

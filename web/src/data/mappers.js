@@ -99,11 +99,13 @@ export const mappers = {
 
   sales: {
     toRow: (id, d) => ({
-      id, product_id: d.productId, student_id: d.studentId, date: d.date, qty: Number(d.qty) || 1,
+      id, product_id: d.productId, student_id: d.studentId || null, buyer_name: d.buyerName || "", buyer_phone: d.buyerPhone || "",
+      date: d.date, qty: Number(d.qty) || 1,
       unit_price: Number(d.unitPrice) || 0, paid: !!d.paid, paid_date: d.paidDate || null, note: d.note || "",
     }),
     fromRow: r => clean({
-      id: r.id, productId: r.product_id, studentId: r.student_id, date: r.date, qty: Number(r.qty),
+      id: r.id, productId: r.product_id, studentId: r.student_id ?? undefined, buyerName: r.buyer_name || undefined,
+      buyerPhone: r.buyer_phone || undefined, date: r.date, qty: Number(r.qty),
       unitPrice: Number(r.unit_price), paid: r.paid, paidDate: r.paid_date ?? undefined, note: r.note,
     }),
   },

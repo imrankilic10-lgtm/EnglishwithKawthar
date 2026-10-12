@@ -182,19 +182,26 @@ create table if not exists public.products (
   updated_at timestamptz not null default now()
 );
 
--- Ürün satışları: hangi öğrenci, kaç adet, kaça, ödendi mi.
+-- Ürün satışları: kime (öğrenci ya da dışarıdan biri), kaç adet, kaça, ödendi mi.
 create table if not exists public.sales (
   id         text primary key,
   product_id text not null references public.products(id) on delete restrict,
-  student_id text not null references public.students(id) on delete restrict,
+  student_id text references public.students(id) on delete restrict,   -- dışarıdan satışta boş
+  buyer_name  text not null default '',                                 -- dışarıdan alıcının adı
+  buyer_phone text not null default '',
   date       date not null,
   qty        integer not null default 1 check (qty > 0),
   unit_price numeric not null default 0 check (unit_price >= 0),
   paid       boolean not null default false,
   paid_date  date,
   note       text not null default '',
-  updated_at timestamptz not null default now()
+  updated_at timestamptz not null default now(),
+  constraint sales_buyer check (student_id is not null or buyer_name <> '')
 );
+-- Tablo eski haliyle (dışarıdan alıcı yokken) kurulduysa:
+alter table public.sales alter column student_id drop not null;
+alter table public.sales add column if not exists buyer_name  text not null default '';
+alter table public.sales add column if not exists buyer_phone text not null default '';
 
 -- Ayarlar (tek satır: id = 'main'): ders türleri, hocalar, varsayılan ücretler.
 create table if not exists public.settings (

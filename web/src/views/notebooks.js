@@ -20,7 +20,7 @@ function productCard(p, many){
     <div class="pc-stock"><b class="num">${st.left}</b><span>/ ${st.stock} kaldı</span></div>
     <div class="db-bar tc-bar" aria-label="Satılan ${st.sold}, kalan ${st.left}"><i style="width:${pct}%"></i></div>
     <div class="nc-grid">
-      <div><small>Satılan</small><b class="num">${st.sold} adet</b><span>${st.buyers} öğrenci</span></div>
+      <div><small>Satılan</small><b class="num">${st.sold} adet</b><span>${st.buyers} kişi${st.outside ? ` · ${st.outside} adet dışarıya` : ""}</span></div>
       <div><small>Tahsil edilen</small><b class="num">${TL(st.paid)}</b><span>toplam ${TL(st.total)}</span></div>
     </div>
     ${st.unpaid ? `<p class="ps-cut"><span class="late-t">${TL(st.unpaid)} ödenmedi · ${st.unpaidCount} kişi</span></p>` : st.sold ? `<p class="ps-cut">Satılanların hepsi ödendi.</p>` : ""}
@@ -30,10 +30,10 @@ function productCard(p, many){
 }
 
 function saleRow(s, many){
-  const st = S.students[s.studentId], p = S.products[s.productId];
-  return `<div class="prow">${avatar(st?.name)}
-    <div class="pmain"><button class="link name" data-act="saleEdit" data-id="${s.id}">${esc(st?.name || "Silinmiş öğrenci")}</button>
-      <span class="sub">${many ? `${esc(p?.name || "")} · ` : ""}${s.qty} adet × ${TL(s.unitPrice)} · ${fmtDate(s.date)}${s.note ? ` · ${esc(s.note)}` : ""}</span>
+  const p = S.products[s.productId], name = D.saleBuyer(s), out = !s.studentId;
+  return `<div class="prow">${avatar(name)}
+    <div class="pmain"><span class="chips"><button class="link name" data-act="saleEdit" data-id="${s.id}">${esc(name)}</button>${out ? `<span class="pill none">dışarıdan</span>` : ""}</span>
+      <span class="sub">${many ? `${esc(p?.name || "")} · ` : ""}${s.qty} adet × ${TL(s.unitPrice)} · ${fmtDate(s.date)}${out && s.buyerPhone ? ` · ${esc(s.buyerPhone)}` : ""}${s.note ? ` · ${esc(s.note)}` : ""}</span>
       ${s.paid ? `<span class="sub">Ödendi${s.paidDate ? ` · ${fmtDate(s.paidDate)}` : ""}</span>` : ""}</div>
     <div class="pside"><span class="amt num">${TL(D.saleTotal(s))}</span>
       ${s.paid ? `<button class="btn xs on" data-act="salePaid" data-id="${s.id}" aria-pressed="true" title="Ödenmedi olarak geri al">✓ Ödendi</button>`
@@ -48,7 +48,7 @@ export function vNotebooks(){
       <div><button class="btn pri" data-act="productNew">+ Ürün ekle</button></div></div></div>`;
   const q = lower(S.saleQ.trim()), many = ps.length > 1;
   const all = D.salesOf().filter(s => S.products[s.productId]);
-  const rows = all.filter(s => (!q || lower(S.students[s.studentId]?.name).includes(q)) && (!S.saleState || (S.saleState === "odendi") === !!s.paid));
+  const rows = all.filter(s => (!q || lower(D.saleBuyer(s)).includes(q)) &&(!S.saleState || (S.saleState === "odendi") === !!s.paid));
   const groups = [[false, "Ödemeyenler", "gecikti"], [true, "Ödeyenler", "odendi"]].map(([paid, label, cls]) => {
     const g = rows.filter(s => !!s.paid === paid);
     return g.length ? `<section class="pgroup ${cls}"><h3 class="pg-h">${label} <span class="num">${g.length}</span></h3>
@@ -75,12 +75,20 @@ function shSale(){
   const st = D.productStats(pid), left = st.left + (d ? Number(d.qty) || 0 : 0);
   const students = D.activeStudents();
   const sel = d?.studentId || sh.studentId || "";
+  const out = sh.who ? sh.who === "out" : !!(d && !d.studentId);   // dışarıdan biri mi?
   const qty = d?.qty || 1, price = d ? d.unitPrice : p.price, paid = d ? !!d.paid : true;
   return `${shHead(d ? "Satışı düzenle" : "Defter satışı")}
     <form id="saleForm" class="stack" novalidate>
       <div class="toolbar"><span class="chip cls-lila">${esc(p.name)}</span><span class="hint">Stokta ${left} adet var</span></div>
-      <label class="f">Öğrenci<select id="s_st"><option value="">Seç</option>${students.map(s => {
+      <div class="f"><span class="flabel">Kime</span><div class="seg">
+        <label><input type="radio" name="s_who" value="st" data-change="saleWho" ${out ? "" : "checked"}>Öğrenci</label>
+        <label><input type="radio" name="s_who" value="out" data-change="saleWho" ${out ? "checked" : ""}>Dışarıdan biri</label></div></div>
+      <label class="f" id="s_stWrap" ${out ? "hidden" : ""}>Öğrenci<select id="s_st"><option value="">Seç</option>${students.map(s => {
         const c = clsOf(s.id); return `<option value="${s.id}" ${s.id === sel ? "selected" : ""}>${esc(s.name)}${c ? ` · ${esc(D.clsName(c))}` : ""}</option>`; }).join("")}</select></label>
+      <div class="fgrid" id="s_outWrap" ${out ? "" : "hidden"}>
+        <label class="f">Alıcının adı<input id="s_bname" value="${esc(d?.buyerName || "")}" placeholder="ör. Selin Demir (veli arkadaşı)"></label>
+        <label class="f">Telefon (isteğe bağlı)<input id="s_bphone" type="tel" inputmode="tel" value="${esc(d?.buyerPhone || "")}"></label>
+      </div>
       <div class="fgrid">
         <label class="f">Adet<input id="s_qty" type="number" min="1" step="1" inputmode="numeric" data-input="saleCalc" value="${qty}"></label>
         <label class="f">Birim fiyat (TL)<input id="s_price" type="number" min="0" inputmode="numeric" data-input="saleCalc" value="${price}"></label>
@@ -130,7 +138,7 @@ export const actions = {
     const s = S.sales[t.dataset.id]; if (!s) return;
     const paid = !s.paid;
     if (await save("sales", s.id, { ...strip(s), paid, paidDate: paid ? D.today() : null }))
-      toast(paid ? `${S.students[s.studentId]?.name || "Öğrenci"}: ${TL(D.saleTotal(s))} ödendi.` : "Ödenmedi olarak geri alındı.");
+      toast(paid ? `${D.saleBuyer(s)}: ${TL(D.saleTotal(s))} ödendi.` : "Ödenmedi olarak geri alındı.");
   },
   productNew: () => openSheet({ type: "product", form: true }),
   productEdit: t => openSheet({ type: "product", form: true, id: t.dataset.id }),
@@ -140,21 +148,30 @@ export const inputs = {
   saleQ(el){ S.saleQ = el.value; return true; },
   saleCalc(){ const q = Number($("#s_qty")?.value) || 0, p = Number($("#s_price")?.value) || 0; const o = $("#s_total"); if (o) o.textContent = TL(q * p); },
 };
-export const changes = { saleState(el){ S.saleState = el.value; return true; } };
+export const changes = {
+  saleState(el){ S.saleState = el.value; return true; },
+  // Kime: öğrenci / dışarıdan biri (form yeniden çizilmez, yazılanlar kaybolmaz)
+  saleWho(el){ const out = el.value === "out"; UI.sheet.who = el.value; $("#s_stWrap").hidden = out; $("#s_outWrap").hidden = !out; },
+};
 export const submits = {
   async saleForm(f, err){
     const sh = UI.sheet, d = sh.id ? S.sales[sh.id] : null, pid = d?.productId || sh.productId;
-    const studentId = $("#s_st").value; if (!studentId) return err("Öğrenciyi seç.");
+    const out = document.querySelector("input[name=s_who]:checked")?.value === "out";
+    const studentId = out ? "" : $("#s_st").value;
+    const buyerName = out ? $("#s_bname").value.trim() : "", buyerPhone = out ? $("#s_bphone").value.trim() : "";
+    if (!out && !studentId) return err("Öğrenciyi seç.");
+    if (out && !buyerName) return err("Alıcının adını yaz.");
     const qty = Number($("#s_qty").value); if (!(qty >= 1) || !Number.isInteger(qty)) return err("Adedi yaz (1 ya da daha fazla).");
     const unitPrice = Number($("#s_price").value); if (!(unitPrice >= 0) || $("#s_price").value === "") return err("Birim fiyatı yaz.");
     const date = $("#s_date").value; if (!isDate(date)) return err("Tarihi seç.");
     const left = D.productStats(pid).left + (d ? Number(d.qty) || 0 : 0);
     if (qty > left) return err(`Stokta ${left} defter var. Daha fazla geldiyse önce ürünü düzenleyip toplam adedi artır.`);
     const paid = document.querySelector("input[name=s_paid]:checked")?.value === "1";
-    const rec = { productId: pid, studentId, date, qty, unitPrice, paid,
-      paidDate: paid ? (d?.paid && d.paidDate ? d.paidDate : date) : null, note: $("#s_note").value.trim() };
+    const rec = { productId: pid, date, qty, unitPrice, paid,
+      paidDate: paid ? (d?.paid && d.paidDate ? d.paidDate : date) : null, note: $("#s_note").value.trim(),
+      ...(out ? { buyerName, buyerPhone } : { studentId }) };
     if (await save("sales", d?.id || uid("sl"), rec)){
-      toast(`${S.students[studentId]?.name}: ${qty} adet · ${TL(qty * unitPrice)}${paid ? " ödendi" : " · ödeme bekleniyor"}.`);
+      toast(`${D.saleBuyer(rec)}: ${qty} adet · ${TL(qty * unitPrice)}${paid ? " ödendi" : " · ödeme bekleniyor"}.`);
       closeSheet();
     }
   },
